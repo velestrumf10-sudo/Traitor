@@ -1,52 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2.5D Among Us Inspired Game</title>
+    <title>2.5D Among Us Game</title>
     <style>
         body {
-            margin: 0;
-            background-color: #1d1f21;
-            color: white;
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            background-color: #141414;
+            color: white;
+            margin: 0;
+            padding: 0;
         }
         #gameCanvas {
             display: block;
-            margin: auto;
-            background-color: #2e2e2e;
-            border: 1px solid #fff;
+            margin: 0 auto;
+        }
+        #controls {
+            text-align: center;
+            margin: 20px;
         }
     </style>
 </head>
 <body>
+    <h1>2.5D Among Us Game</h1>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="controls">
+        <button onclick="startGame()">Start Game</button>
+    </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        let player = { x: 400, y: 300, width: 40, height: 60, color: 'red' };
+        let players = [];
+        let imposters = [];
+        let tasks = [];
 
-        function drawPlayer() {
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
+        function startGame() {
+            // Initialize the game state
+            players = createPlayers(6);
+            imposters = players.slice(0, 2); // Set two imposters
+            generateTasks();
+            gameLoop();
         }
 
-        function updateGameArea() {
+        function createPlayers(numPlayers) {
+            let players = [];
+            for (let i = 0; i < numPlayers; i++) {
+                players.push({ id: i, name: `Player ${i + 1}`, x: Math.random() * canvas.width, y: Math.random() * canvas.height });
+            }
+            return players;
+        }
+
+        function generateTasks() {
+            // Generate some tasks randomly
+            tasks = ['Fix Electrical', 'Clean O2', 'Submit Scan', 'WiFi Task', 'Align Engine', 'Detective Task'];
+        }
+
+        function gameLoop() {
+            // Main game loop
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawPlayer();
-            requestAnimationFrame(updateGameArea);
+            drawPlayers();
+            drawTasks();
+            requestAnimationFrame(gameLoop);
         }
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowUp') player.y -= 5;
-            if (event.key === 'ArrowDown') player.y += 5;
-            if (event.key === 'ArrowLeft') player.x -= 5;
-            if (event.key === 'ArrowRight') player.x += 5;
-        });
+        function drawPlayers() {
+            players.forEach(player => {
+                ctx.fillStyle = imposters.includes(player) ? 'red' : 'blue';
+                ctx.fillRect(player.x, player.y, 20, 20);
+            });
+        }
 
-        updateGameArea();
+        function drawTasks() {
+            tasks.forEach((task, index) => {
+                ctx.fillStyle = 'green';
+                ctx.fillRect(50, 50 + index * 25, 150, 20);
+                ctx.fillStyle = 'white';
+                ctx.fillText(task, 55, 65 + index * 25);
+            });
+        }
     </script>
 </body>
 </html>
