@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.5D Among Us Inspired Game</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #1d1f21;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #gameCanvas {
+            display: block;
+            margin: auto;
+            background-color: #2e2e2e;
+            border: 1px solid #fff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let player = { x: 400, y: 300, width: 40, height: 60, color: 'red' };
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function updateGameArea() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            requestAnimationFrame(updateGameArea);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowUp') player.y -= 5;
+            if (event.key === 'ArrowDown') player.y += 5;
+            if (event.key === 'ArrowLeft') player.x -= 5;
+            if (event.key === 'ArrowRight') player.x += 5;
+        });
+
+        updateGameArea();
+    </script>
+</body>
+</html>
